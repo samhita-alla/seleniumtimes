@@ -26,7 +26,7 @@ browser = webdriver.Chrome()
 f = csv.writer(open("contents.csv", "w"))
 
 
-if not d:
+if d=='\n':
     if m == "1" or m == "3" or m == "5" or m == "7" or m == "8" or m == "10" or m == "12":
         k = 32
     else:
@@ -43,27 +43,30 @@ if not d:
         links = browser.find_element_by_xpath(
             "/html/body/div[1]/table[2]/tbody/tr[2]/td[1]/div[3]/table")
         link = links.find_elements_by_css_selector('a')
+        print(links)
         for l in link:
             h = l.get_attribute('href')
             t = l.get_attribute('text')
-            toi_article = Article(h, language="en")
-            toi_article.download()
-            toi_article.parse()
-            toi_article.nlp()
-            content = toi_article.text
-            request = requests.get(h)
+            '''request = requests.get(h)
             if request.status_code == 200:
                 status = "Ok!"
+                toi_article = Article(h, language="en")
+                toi_article.download()
+                toi_article.parse()
+                toi_article.nlp()
+                content = toi_article.text
             else:
                 status = "Not Ok!"
+                content = ""
             sql = "INSERT INTO news VALUES (default, %s, %s, %s,%s);"
             data = (t, h, status, content)
             cursor.execute(sql, data)
-            conn.commit()
+            conn.commit()'''
             f.writerow([t, h])
 
 
 else:
+    print(1)
     weblink = url + "/archive/year-" + y + ",month-" + m + ".cms"
     browser.get(weblink)
     tab = browser.find_element_by_id('calender')
